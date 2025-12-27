@@ -28,13 +28,6 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .gradient-border {
-            position: relative;
-            border-radius: 0.75rem;
-            background: linear-gradient(45deg, #444, #111);
-            padding: 1px;
-        }
-
         .btn-hover {
             transition: all 0.3s ease;
         }
@@ -44,16 +37,16 @@
 
         #qrcode img {
             margin: 0 auto;
-            border: 8px solid white;
-            border-radius: 8px;
+            border: 12px solid white;
+            border-radius: 12px;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-start p-6 pb-12">
+<body class="min-h-screen flex flex-col items-center justify-start p-6 pb-20">
 
     <!-- Header Section -->
     <div class="w-full max-w-md mt-8 mb-10 text-center">
-        <div class="inline-block p-1 rounded-full bg-gradient-to-tr from-zinc-700 to-zinc-400 mb-6">
+        <div class="inline-block p-1 rounded-full bg-gradient-to-tr from-zinc-700 to-zinc-400 mb-6 shadow-xl shadow-white/5">
             <div class="bg-black rounded-full p-4">
                 <i data-lucide="shirt" class="w-10 h-10 text-white"></i>
             </div>
@@ -99,7 +92,7 @@
 
         <!-- Utility Buttons Row -->
         <div class="grid grid-cols-2 gap-4 mt-8">
-            <button onclick="saveContact()" class="bg-white text-black p-4 rounded-xl flex flex-col items-center justify-center space-y-2 btn-hover font-bold">
+            <button onclick="saveContact()" class="bg-white text-black p-4 rounded-xl flex flex-col items-center justify-center space-y-2 btn-hover font-bold shadow-lg shadow-white/10">
                 <i data-lucide="user-plus" class="w-6 h-6"></i>
                 <span class="text-xs uppercase">Save Contact</span>
             </button>
@@ -111,42 +104,77 @@
         </div>
     </div>
 
-    <!-- QR Section (For the Shop Owner) -->
+    <!-- QR Section -->
     <div class="w-full max-w-md mt-16 text-center">
-        <p class="text-zinc-500 text-xs uppercase tracking-widest mb-4">Your Shop QR Code</p>
-        <div id="qrcode" class="inline-block p-4 bg-white rounded-2xl shadow-2xl shadow-white/5"></div>
-        <p class="text-zinc-600 text-[10px] mt-4 max-w-[200px] mx-auto uppercase">Point your camera here to open this profile</p>
+        <div class="bg-zinc-900/50 p-8 rounded-3xl border border-white/5">
+            <p class="text-zinc-500 text-xs uppercase tracking-widest mb-6">Your Shop QR Code</p>
+            
+            <div id="qrcode" class="inline-block mb-6 shadow-2xl"></div>
+            
+            <div class="space-y-4">
+                <!-- Set the default value to your live URL -->
+                <input type="text" id="qrUrl" 
+                    class="w-full bg-black border border-zinc-800 rounded-lg px-4 py-2 text-sm text-center focus:outline-none focus:border-zinc-500 transition-colors"
+                    placeholder="Enter your public URL here"
+                    value="https://om-cjma.onrender.com"
+                    oninput="updateQR()">
+                
+                <p class="text-zinc-600 text-[10px] uppercase leading-relaxed">
+                    Point your phone camera at the code above to scan.<br>
+                    You can click "Download" to save the image for printing.
+                </p>
+
+                <button onclick="downloadQR()" class="w-full text-zinc-400 hover:text-white text-xs flex items-center justify-center space-x-2 py-2">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    <span>Download QR Image</span>
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Notification Toast -->
-    <div id="toast" class="fixed bottom-10 bg-zinc-800 text-white px-6 py-3 rounded-full text-sm font-medium opacity-0 transition-opacity duration-300 pointer-events-none">
-        Link copied to clipboard!
+    <div id="toast" class="fixed bottom-10 bg-zinc-100 text-black px-8 py-3 rounded-full text-sm font-bold opacity-0 transition-opacity duration-300 pointer-events-none shadow-2xl">
+        Done!
     </div>
 
     <script>
-        // Initialize Icons
         lucide.createIcons();
 
-        // Generate QR Code for the CURRENT URL
-        // In a real environment, this would point to where this file is hosted
-        const shopUrl = window.location.href;
-        new QRCode(document.getElementById("qrcode"), {
-            text: shopUrl,
-            width: 160,
-            height: 160,
-            colorDark : "#000000",
-            colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.H
-        });
+        let qrcode;
 
-        // Function to Save Contact (vCard generation)
+        function updateQR() {
+            const url = document.getElementById('qrUrl').value || "https://om-cjma.onrender.com";
+            const container = document.getElementById("qrcode");
+            container.innerHTML = "";
+            
+            qrcode = new QRCode(container, {
+                text: url,
+                width: 200,
+                height: 200,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        }
+
+        window.onload = updateQR;
+
+        function downloadQR() {
+            const img = document.querySelector("#qrcode img");
+            if (!img) return;
+            const link = document.createElement("a");
+            link.href = img.src;
+            link.download = "MENS_FASHION_QR.png";
+            link.click();
+            showToast("QR Code Saved!");
+        }
+
         function saveContact() {
             const vcard = "BEGIN:VCARD\n" +
                         "VERSION:3.0\n" +
                         "FN:MENS FASHION\n" +
-                        "ORG:MENS FASHION Clothing\n" +
                         "TEL;TYPE=CELL,VOICE:+917793036608\n" +
-                        "X-SOCIALPROFILE;TYPE=instagram:https://instagram.com/ommensfashion\n" +
+                        "URL:https://instagram.com/ommensfashion\n" +
                         "END:VCARD";
             
             const blob = new Blob([vcard], { type: "text/vcard" });
@@ -155,30 +183,26 @@
             newLink.download = "MENS_FASHION.vcf";
             newLink.href = url;
             newLink.click();
-            showToast("Contact file downloaded!");
+            showToast("Contact Ready!");
         }
 
-        // Function to Share Profile
         async function shareProfile() {
+            const shareData = {
+                title: 'MENS FASHION',
+                text: 'Premium Menswear Shop',
+                url: document.getElementById('qrUrl').value
+            };
+
             if (navigator.share) {
-                try {
-                    await navigator.share({
-                        title: 'MENS FASHION',
-                        text: 'Check out MENS FASHION for premium clothing!',
-                        url: window.location.href
-                    });
-                } catch (err) {
-                    console.log('Share cancelled');
-                }
+                try { await navigator.share(shareData); } catch (err) {}
             } else {
-                // Fallback: Copy to clipboard
                 const dummy = document.createElement('input');
                 document.body.appendChild(dummy);
-                dummy.value = window.location.href;
+                dummy.value = shareData.url;
                 dummy.select();
                 document.execCommand('copy');
                 document.body.removeChild(dummy);
-                showToast("Link copied to clipboard!");
+                showToast("Link Copied!");
             }
         }
 
@@ -186,9 +210,7 @@
             const toast = document.getElementById('toast');
             toast.innerText = message;
             toast.style.opacity = '1';
-            setTimeout(() => {
-                toast.style.opacity = '0';
-            }, 3000);
+            setTimeout(() => { toast.style.opacity = '0'; }, 3000);
         }
     </script>
 </body>
