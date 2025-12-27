@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MENS FASHION | Official Digital Card</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- QR Code Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: #ffffff;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-hover {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-hover:active {
+            transform: scale(0.96);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        #qrcode img {
+            margin: 0 auto;
+            border: 12px solid white;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-start p-6 pb-24">
+
+    <!-- Brand Header -->
+    <div class="w-full max-w-md mt-10 mb-12 text-center">
+        <div class="inline-block p-1 rounded-full bg-gradient-to-tr from-zinc-700 to-zinc-400 mb-6 shadow-2xl shadow-white/5">
+            <div class="bg-black rounded-full p-5">
+                <i data-lucide="shirt" class="w-12 h-12 text-white"></i>
+            </div>
+        </div>
+        <h1 class="serif text-5xl tracking-widest uppercase mb-3">MENS FASHION</h1>
+        <div class="flex items-center justify-center space-x-2">
+            <span class="h-[1px] w-8 bg-zinc-700"></span>
+            <p class="text-zinc-400 text-xs tracking-[0.3em] uppercase font-light">Established Quality</p>
+            <span class="h-[1px] w-8 bg-zinc-700"></span>
+        </div>
+    </div>
+
+    <!-- Contact & Social Actions -->
+    <div class="w-full max-w-md space-y-4">
+        
+        <!-- Instagram Link -->
+        <a href="https://instagram.com/ommensfashion" target="_blank" class="block">
+            <div class="glass-card p-5 rounded-2xl flex items-center justify-between btn-hover">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-gradient-to-br from-indigo-600 via-pink-500 to-yellow-500 p-2.5 rounded-xl shadow-lg">
+                        <i data-lucide="instagram" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Follow Our Style</p>
+                        <p class="font-bold text-lg">@ommensfashion</p>
+                    </div>
+                </div>
+                <i data-lucide="chevron-right" class="w-5 h-5 text-zinc-600"></i>
+            </div>
+        </a>
+
+        <!-- WhatsApp Link -->
+        <a href="https://wa.me/917793036608" target="_blank" class="block">
+            <div class="glass-card p-5 rounded-2xl flex items-center justify-between btn-hover">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-green-500 p-2.5 rounded-xl shadow-lg">
+                        <i data-lucide="message-circle" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Order / Inquire</p>
+                        <p class="font-bold text-lg">+91 77930 36608</p>
+                    </div>
+                </div>
+                <i data-lucide="chevron-right" class="w-5 h-5 text-zinc-600"></i>
+            </div>
+        </a>
+
+        <!-- Action Row -->
+        <div class="grid grid-cols-2 gap-4 pt-4">
+            <button onclick="saveContact()" class="bg-white text-black p-5 rounded-2xl flex flex-col items-center justify-center space-y-2 btn-hover font-bold shadow-xl">
+                <i data-lucide="user-plus" class="w-6 h-6"></i>
+                <span class="text-[10px] uppercase tracking-tighter">Save Contact</span>
+            </button>
+            
+            <button onclick="shareProfile()" class="glass-card p-5 rounded-2xl flex flex-col items-center justify-center space-y-2 btn-hover font-bold">
+                <i data-lucide="share-2" class="w-6 h-6 text-zinc-300"></i>
+                <span class="text-[10px] uppercase tracking-tighter">Share Shop</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- QR Code Section (The Generator) -->
+    <div class="w-full max-w-md mt-16 text-center">
+        <div class="bg-zinc-900/40 p-10 rounded-[2.5rem] border border-white/5 backdrop-blur-sm">
+            <p class="text-zinc-500 text-[10px] uppercase tracking-[0.4em] mb-8 font-semibold">Official Shop QR</p>
+            
+            <div id="qrcode" class="inline-block mb-8 shadow-2xl transition-transform hover:scale-105 duration-500"></div>
+            
+            <div class="space-y-6">
+                <div class="relative">
+                    <input type="text" id="qrUrl" 
+                        class="w-full bg-black/50 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-center focus:outline-none focus:border-white/30 transition-all font-mono text-zinc-400"
+                        value="https://om-cjma.onrender.com"
+                        oninput="updateQR()">
+                    <p class="text-[9px] text-zinc-600 mt-3 uppercase tracking-widest font-medium">Verify your Render URL above</p>
+                </div>
+
+                <button onclick="downloadQR()" class="w-full bg-zinc-800/50 hover:bg-zinc-800 text-zinc-300 hover:text-white text-xs font-bold py-4 rounded-xl flex items-center justify-center space-x-3 transition-all">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    <span>DOWNLOAD HIGH-RES QR</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-10 bg-zinc-100 text-black px-10 py-4 rounded-2xl text-xs font-black opacity-0 transition-all duration-300 pointer-events-none shadow-2xl translate-y-10 uppercase tracking-widest">
+        Action Successful
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        let qrcode;
+
+        function updateQR() {
+            const url = document.getElementById('qrUrl').value || "https://om-cjma.onrender.com";
+            const container = document.getElementById("qrcode");
+            container.innerHTML = "";
+            
+            qrcode = new QRCode(container, {
+                text: url,
+                width: 220,
+                height: 220,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        }
+
+        // Initialize on load
+        window.onload = updateQR;
+
+        function downloadQR() {
+            const img = document.querySelector("#qrcode img");
+            if (!img) return;
+            const link = document.createElement("a");
+            link.href = img.src;
+            link.download = "MENS_FASHION_QR.png";
+            link.click();
+            showToast("QR Downloaded");
+        }
+
+        function saveContact() {
+            const vcard = "BEGIN:VCARD\n" +
+                        "VERSION:3.0\n" +
+                        "FN:MENS FASHION\n" +
+                        "ORG:MENS FASHION Clothing\n" +
+                        "TEL;TYPE=CELL,VOICE:+917793036608\n" +
+                        "X-SOCIALPROFILE;TYPE=instagram:https://instagram.com/ommensfashion\n" +
+                        "END:VCARD";
+            
+            const blob = new Blob([vcard], { type: "text/vcard" });
+            const url = window.URL.createObjectURL(blob);
+            const newLink = document.createElement('a');
+            newLink.download = "MENS_FASHION.vcf";
+            newLink.href = url;
+            newLink.click();
+            showToast("Contact Saved");
+        }
+
+        async function shareProfile() {
+            const url = document.getElementById('qrUrl').value;
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: 'MENS FASHION',
+                        text: 'Quality menswear - Contact us directly.',
+                        url: url
+                    });
+                } catch (e) {}
+            } else {
+                const el = document.createElement('textarea');
+                el.value = url;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+                showToast("Link Copied");
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.style.opacity = '1';
+            toast.style.transform = 'translateY(0)';
+            setTimeout(() => { 
+                toast.style.opacity = '0'; 
+                toast.style.transform = 'translateY(10px)';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
